@@ -13,10 +13,10 @@ obj.defaultValues.missingValuePercentage = 20;
 ```
 
 ## Functionality
-```obj = obj.loadFile``` Retrieve files for processing
-```obj = obj.getPeakList``` Retrieve peak list per file
-```obj = obj.uniqueFeatures``` Get unique features for all sample files
-```obj = obj.retrieveIntensities``` Get the peak intensity per feature per file
-```obj = obj.imputeMissingValues``` Filter out features with a missing value percetange greater than user input and impute remaining values via the _k_nn algorithm
-```obj = obj.removeBackgroundFeatures``` Remove background features from the intensity matrix before export
-```obj.exportData``` Export the intensity matrix in .xlsx format
+```obj = obj.loadFile``` Retrieve files for processing <br/>
+```obj = obj.getPeakList``` Retrieve peak list per file <br/>
+```obj = obj.uniqueFeatures``` Get unique features for all sample files <br/>
+```obj = obj.retrieveIntensities``` Get the peak intensity per feature per file <br/>
+```obj = obj.imputeMissingValues``` Filter out features with a missing value percetange greater than user input and impute remaining values via the _k_nn algorithm <br/>
+```obj = obj.removeBackgroundFeatures``` Remove background features from the intensity matrix before export <br/>
+```obj.exportData``` Export the intensity matrix in .xlsx format <br/>
