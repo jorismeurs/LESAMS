@@ -69,10 +69,10 @@ classdef LESAMS
         
         function obj = getPeakList(obj)
             validateInput(obj)
+            wb = waitbar(0,'Obtaining peak list');
             for j = 1:length(obj.files.spectralFiles)
                if isequal(obj.options.fileType,'txt')
-                   tempFile = obj.files.spectralFiles{j};
-                   averageSpectrum = readSIMSSpectra(tempFile);
+                   averageSpectrum = readSIMSSpectra(obj,j);
                else
                    averageSpectrum  = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.spectralFiles{j}))));
                end
@@ -81,18 +81,20 @@ classdef LESAMS
                int = averageSpectrum(idx,2);
                obj.data.peakList{j,1} = mspeaks(mz,int,...
                    'HeightFilter',obj.defaultValues.peakHeight,'Denoising',false);
+               waitbar(j/(length(obj.files.spectralFiles)+1),wb,'Obtaining peak list')
             end
             if ~isempty(obj.files.backgroundFile)
                 if isequal(obj.options.fileType,'txt')
-                    tempFile = obj.files.spectralFiles{j};
-                    averageSpectrum = readSIMSSpectra(tempFile);
+                    backgroundSpectrum = readSIMSSpectra(obj,j);
                 else
                     backgroundSpectrum = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.backgroundFile))));
                 end
                 
                 obj.data.backgroundPeaks = mspeaks(backgroundSpectrum(:,1),backgroundSpectrum(:,2),...
                     'HeightFilter',obj.defaultValues.peakHeight,'Denoising',false);
+                waitbar((length(obj.files.spectralFiles)+1)/(length(obj.files.spectralFiles)+1),wb,'Obtaining peak list')
             end
+            delete(wb)
         end
         
         function obj = uniqueFeatures(obj)
@@ -189,8 +191,8 @@ classdef LESAMS
             end
         end
         
-        function spectralData = readSIMSSpectra(file)
-            fileID = fopen(file,'r'); 
+        function spectralData = readSIMSSpectra(obj,iteration)
+            fileID = fopen(obj.files.spectralFiles{iteration},'r'); 
             msData = textscan(fileID,'%f','Delimiter','\t','HeaderLines',3); 
             msData = cell2mat(msData);
             fclose(fileID);
