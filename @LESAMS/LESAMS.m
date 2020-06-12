@@ -2,7 +2,7 @@ classdef LESAMS
     % Processing averaged LESA-MS data acquired on a Orbitrap system
     
     properties (Constant = true)
-        version = '0.1.1';
+        version = '0.1.2';
         developer = 'Joris Meurs, MSc'
         license = 'MIT'
     end
