@@ -2,7 +2,7 @@ classdef LESAMS
     % Processing averaged LESA-MS data acquired on a Orbitrap system
     
     properties (Constant = true)
-        version = '0.0.1';
+        version = '0.0.2';
         developer = 'Joris Meurs, MSc'
         license = 'MIT'
     end
@@ -36,21 +36,30 @@ classdef LESAMS
             
             obj.options.exportFormat = '.xlsx';
             obj.options.backgroundSubtraction = true;
+            obj.options.fileType = [];
         end
         
         function obj = loadFiles(obj)
-            [FileName,PathName] = uigetfile('.mzXML',...
-                'Load Averaged Spectra (.mzXML)',...
+            [FileName,PathName] = uigetfile({'.mzXML';'.txt'},...
+                'Load Averaged Spectra',...
                 'MultiSelect','on');
             if isequal(FileName,0)
                 return
             end
             obj.files.fileLabels = FileName;
+            if contains(obj.files.fileLabels,'mzXML')
+                obj.options.fileType = 'mzXML';
+            elseif contains(obj.files.fileLabels,'txt')
+                obj.options.fileType = 'txt';
+            else
+                error('Invalid file type');
+            end
+            
             obj.files.spectralFiles = fullfile(PathName,FileName);
             
             if obj.options.backgroundSubtraction == true
-               [FileName,PathName] = uigetfile('.mzXML',...
-                    'Load Background Spectrum (.mzXML)');
+               [FileName,PathName] = uigetfile({'.mzXML';'.txt'},...
+                    'Load Background Spectrum');
                 if isequal(FileName,0)
                     return
                 end
@@ -61,7 +70,12 @@ classdef LESAMS
         function obj = getPeakList(obj)
             validateInput(obj)
             for j = 1:length(obj.files.spectralFiles)
-               averageSpectrum  = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.spectralFiles{j}))));
+               if isequal(obj.options.fileType,'txt')
+                   tempFile = obj.files.spectralFiles{j};
+                   averageSpectrum = readSIMSSpectra(tempFile);
+               else
+                   averageSpectrum  = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.spectralFiles{j}))));
+               end
                mz = []; int = [];
                [mz,idx] = unique(averageSpectrum(:,1));
                int = averageSpectrum(idx,2);
@@ -69,7 +83,13 @@ classdef LESAMS
                    'HeightFilter',obj.defaultValues.peakHeight,'Denoising',false);
             end
             if ~isempty(obj.files.backgroundFile)
-                backgroundSpectrum = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.backgroundFile))));
+                if isequal(obj.options.fileType,'txt')
+                    tempFile = obj.files.spectralFiles{j};
+                    averageSpectrum = readSIMSSpectra(tempFile);
+                else
+                    backgroundSpectrum = double(cell2mat(mzxml2peaks(mzxmlread(obj.files.backgroundFile))));
+                end
+                
                 obj.data.backgroundPeaks = mspeaks(backgroundSpectrum(:,1),backgroundSpectrum(:,2),...
                     'HeightFilter',obj.defaultValues.peakHeight,'Denoising',false);
             end
@@ -167,6 +187,19 @@ classdef LESAMS
             catch
                 error('File format or file name not supported');
             end
+        end
+        
+        function spectralData = readSIMSSpectra(file)
+            fileID = fopen(file,'r'); 
+            msData = textscan(fileID,'%f','Delimiter','\t','HeaderLines',3); 
+            msData = cell2mat(msData);
+            fclose(fileID);
+            fclose('all');
+
+            % Reconstruct cell
+            mz = msData(2:3:end,1);
+            int = msData(3:3:end,1);
+            spectralData = [mz,int];
         end
     end
     
