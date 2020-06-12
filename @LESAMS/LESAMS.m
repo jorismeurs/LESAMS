@@ -2,7 +2,7 @@ classdef LESAMS
     % Processing averaged LESA-MS data acquired on a Orbitrap system
     
     properties (Constant = true)
-        version = '0.0.2';
+        version = '0.1.1';
         developer = 'Joris Meurs, MSc'
         license = 'MIT'
     end
@@ -40,7 +40,7 @@ classdef LESAMS
         end
         
         function obj = loadFiles(obj)
-            [FileName,PathName] = uigetfile({'.mzXML';'.txt'},...
+            [FileName,PathName] = uigetfile({'*.mzXML';'*.txt'},...
                 'Load Averaged Spectra',...
                 'MultiSelect','on');
             if isequal(FileName,0)
@@ -58,7 +58,7 @@ classdef LESAMS
             obj.files.spectralFiles = fullfile(PathName,FileName);
             
             if obj.options.backgroundSubtraction == true
-               [FileName,PathName] = uigetfile({'.mzXML';'.txt'},...
+               [FileName,PathName] = uigetfile({'*.mzXML';'*.txt'},...
                     'Load Background Spectrum');
                 if isequal(FileName,0)
                     return
