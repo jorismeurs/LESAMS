@@ -16,7 +16,8 @@ MATLAB R2017a including the following toolboxes: </br>
 ## Preparing the data
 1. Create an average spectrum in XCalibur for the range of interest
 2. Export the spectrum as .RAW file
-3. Convert the .RAW to .mzXML in ProteoWizard (no filter, no compression, 32-bit)
+3. Convert the .RAW to .mzXML in ProteoWizard (no filter, no compression, 32-bit; see example below; msconvert screen can look different depending on version)
+![msconvert screen](/images/ProteoWizard.png)
 
 ## Initiating class
 Type ```obj = LESAMS``` to initiate class. Default values for processing are as follows
