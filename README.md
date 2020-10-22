@@ -76,4 +76,4 @@ Excel workbook containing the intensity per ion (<it>m/z</it>) for each file (sa
 MIT License
 
 ## Example data
-Data for testing the source is available from https://rdmc.nottingham.ac.uk/handle/internal/6183. The data files (36.53 MB) consists of LESA-MS data acquired (.mzXML) on dried urine sample. Use the files labelled ```UrineStudy_LESAMS_DMA...```. The output Excel file should have 9 rows and 131 columns when using the default values.
+Data for testing the source is available from https://rdmc.nottingham.ac.uk/handle/internal/6183. The data files (36.53 MB) consists of LESA-MS data acquired (.mzXML) on dried urine sample. Use the files labelled ```UrineStudy_LESAMS_DMA...```. The output Excel file should have 9 rows and 131 columns when using the default values. The total processing time should be around 1 minute.
