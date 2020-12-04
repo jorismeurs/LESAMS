@@ -1,7 +1,7 @@
 function validateInput(obj)
 % Check if conditions are met for processing
 
-if obj.options.backgroundSubtraction ~= true && obj.options.backgroundSubstraction ~= false
+if obj.options.backgroundSubtraction ~= true && obj.options.backgroundSubtraction ~= false
    error('Value for background subtraction should be true or false'); 
 end
 
